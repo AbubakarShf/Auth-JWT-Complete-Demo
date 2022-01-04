@@ -1,5 +1,5 @@
+from django.contrib.auth import authenticate
 from django.http.response import HttpResponse
-import requests
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,11 +7,13 @@ from rest_framework import status
 from .serializer import StudentSerializer,RegisterSerializer
 from .models import Student,User
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication,JWTTokenUserAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
 from django.shortcuts import reverse
 from django.shortcuts import render, redirect, HttpResponseRedirect
+
+
 ACCESS_TOKEN_GLOBAL=None
 class Register(APIView):
     RegisterSerializer_Class=RegisterSerializer
@@ -42,7 +44,6 @@ class Login(APIView):
     def post(self,request,format=None):
         email = request.POST.get('email')
         password = request.POST.get('password')
-        print(email,password)
         user = User.objects.filter(email=email).first()
 
         if user is None:
@@ -55,26 +56,27 @@ class Login(APIView):
         refresh = RefreshToken.for_user(user)
         global ACCESS_TOKEN_GLOBAL
         ACCESS_TOKEN_GLOBAL=str(refresh.access_token)
+        print("ACCESS_TOKEN_GLOBAL in login=> ",ACCESS_TOKEN_GLOBAL)
         response=render(request,'students.html')
-        response.set_cookie('Access_Token',str(refresh.access_token))
+        response.set_cookie('Access_Token',ACCESS_TOKEN_GLOBAL)
         response.set_cookie('logged_in', True)
         return response
 
 class StudentData(APIView):
-    authentication_classes=[JWTAuthentication]
-    permission_classes=[IsAuthenticated]
+    authentication_classes=[JWTAuthentication,]
 
     StudentSerializer_Class=StudentSerializer
     def get(self,request,format=None):
-        token = request.COOKIES.get('jwt')
-        # if token!=ACCESS_TOKEN_GLOBAL:
-            # raise AuthenticationFailed('Unauthenticated!')
+
+        token = request.COOKIES.get('Access_Token')
+        print("ACCESS_TOKEN_GLOBAL in stu=> ",ACCESS_TOKEN_GLOBAL)
+        print("Access_Token in stu=> ",token)
+        send='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQxMzI2NTUzLCJqdGkiOiI4Mjk1OGYwZTA2NjM0YmU1OTM5ODhhNjhkMzY1NWJlZSIsInVzZXJfaWQiOjF9.PrYE9pvkuHaaZnq9HkdnfSLpkz6B8MtPcMik4pu8ChY'
+        if token!=ACCESS_TOKEN_GLOBAL and token==None:
+            raise AuthenticationFailed('Unauthenticated!')
         DataObj=Student.objects.all()
         serializer=self.StudentSerializer_Class(DataObj,many=True)
         serializerData=serializer.data
-        users={
-            'key':ACCESS_TOKEN_GLOBAL
-        }
         return Response(
     {
         "message": "Login Successfully",

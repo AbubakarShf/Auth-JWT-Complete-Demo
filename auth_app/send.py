@@ -1,0 +1,7 @@
+import requests
+token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQxMzI2NTUzLCJqdGkiOiI4Mjk1OGYwZTA2NjM0YmU1OTM5ODhhNjhkMzY1NWJlZSIsInVzZXJfaWQiOjF9.PrYE9pvkuHaaZnq9HkdnfSLpkz6B8MtPcMik4pu8ChY'
+headers={}
+headers['Authorization']='Bearer '+token
+# headers['Authorization']='Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQxMzI2MjEzLCJqdGkiOiJmZWQ5ZjZjZTg3OWE0MzEyOTYzM2ZiOTgzMTEwODk5MyIsInVzZXJfaWQiOjF9.571Du_YWIeW9gCHOqsEXOEOOyC4BYCB1TNndwXZvL6o'
+Data=requests.get('http://127.0.0.1:8000/student',headers=headers)
+print(Data.text)
