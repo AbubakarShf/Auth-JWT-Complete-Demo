@@ -71,7 +71,7 @@ class StudentData(APIView):
         token = request.COOKIES.get('Access_Token')
         print("ACCESS_TOKEN_GLOBAL in stu=> ",ACCESS_TOKEN_GLOBAL)
         print("Access_Token in stu=> ",token)
-        send='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQxMzI2NTUzLCJqdGkiOiI4Mjk1OGYwZTA2NjM0YmU1OTM5ODhhNjhkMzY1NWJlZSIsInVzZXJfaWQiOjF9.PrYE9pvkuHaaZnq9HkdnfSLpkz6B8MtPcMik4pu8ChY'
+        #send='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQxMzI2NTUzLCJqdGkiOiI4Mjk1OGYwZTA2NjM0YmU1OTM5ODhhNjhkMzY1NWJlZSIsInVzZXJfaWQiOjF9.PrYE9pvkuHaaZnq9HkdnfSLpkz6B8MtPcMik4pu8ChY'
         if token!=ACCESS_TOKEN_GLOBAL and token==None:
             raise AuthenticationFailed('Unauthenticated!')
         DataObj=Student.objects.all()
